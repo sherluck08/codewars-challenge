@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 // Write a simple parser that will parse and run Deadfish.
@@ -15,6 +16,15 @@ import (
 // Invalid characters should be ignored.
 
 // Parse("iiisdoso") == []int{8, 64}
+
+func starter(wg *sync.WaitGroup) {
+	fmt.Println("This is the starter on call")
+	wg.Done()
+}
+
+func follow() {
+	fmt.Println("This is the follower on call")
+}
 
 func Parse(data string) []int {
 	result := []int{}
@@ -36,5 +46,10 @@ func Parse(data string) []int {
 }
 
 func main() {
-	fmt.Println(Parse("iiisdoso"))
+	// fmt.Println(Parse("iiisdoso"))
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go starter(&wg)
+	follow()
+	wg.Wait()
 }
